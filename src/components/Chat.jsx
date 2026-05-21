@@ -80,7 +80,6 @@ function Chat() {
               <TbBrain
                 size={25}
                 className="text-blue-400 cursor-pointer mt-8"
-                onClick={() => setActivePage("ai")}
               />
               <p className="text-sm  bg-black/70 px-2 py-1 mt-8 hidden group-hover:block absolute left-8 rounded">
                 AI Assistant

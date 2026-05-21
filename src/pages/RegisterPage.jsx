@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { HiChatBubbleLeftRight } from "react-icons/hi2";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { useNavigate, Link } from "react-router-dom";
 
 function RegisterPage() {
   const initialValues = {
@@ -16,6 +17,7 @@ function RegisterPage() {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -35,6 +37,7 @@ function RegisterPage() {
     if (Object.keys(errors).length === 0) {
       setFormValues(initialValues);
     }
+    navigate("/login");
   };
 
   const validateForm = (values) => {
@@ -180,9 +183,9 @@ function RegisterPage() {
 
             <div className="mt-4 text-sm text-gray-400 flex gap-1">
               <p>already have an account?</p>
-              <a href="" className="underline text-blue-500">
+              <Link to="/login" className="underline text-blue-500">
                 login
-              </a>
+              </Link>
             </div>
           </div>
         </div>

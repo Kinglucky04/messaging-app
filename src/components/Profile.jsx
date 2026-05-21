@@ -1,10 +1,14 @@
 import React from "react";
+import { useState, useRef } from "react";
 import Bdg from "../assets/images/bdg.jpeg";
 import { BsChatDotsFill } from "react-icons/bs";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 
 function Profile() {
+  const [profileImg, setProfileImg] = useState(false);
+  const fileInputRef = useRef(null);
+
   return (
     <div className="flex flex-col h-screen overflow-y-auto">
       <div className=" fixed top-0 left-30 right-250 bg-white  h-64 flex flex-col">
@@ -12,13 +16,23 @@ function Profile() {
           <h1 className="text-xl">My Profile</h1>
         </div>
         <div className="bg-white flex flex-col text-center justify-center items-center">
-          <div>
-            <img
-              src={Bdg}
-              alt="Profile"
-              className="w-16 h-16 rounded-full -mt-8"
-            />
-          </div>
+          <input
+            type="file"
+            id="pfp"
+            accept="image/*"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={(e) => {
+              setProfileImg(e.target.files[0]);
+            }}
+          />
+          <img
+            src={profileImg ? URL.createObjectURL(profileImg) : Bdg}
+            alt="Profile"
+            className="w-16 h-16 rounded-full object-cover cursor-pointer -mt-8"
+            onClick={() => fileInputRef.current.click()}
+          />
+
           <div className="mt-3">
             <h1 className="text-xl font-semibold"> Lucky Pam</h1>
             <p className="text-sm text-gray-400">Software Engineer</p>

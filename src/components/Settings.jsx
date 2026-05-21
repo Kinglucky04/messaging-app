@@ -9,6 +9,7 @@ import {
   IoLogOut,
 } from "react-icons/io5";
 import { FiChevronRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 function SettingsPage() {
   const settingsOptions = [
@@ -95,7 +96,9 @@ function SettingsPage() {
         <button className="flex items-center gap-3 text-red-500 hover:text-red-600 transition cursor-pointer">
           <IoLogOut size={22} />
 
-          <span className="text-sm font-medium">Logout</span>
+          <span className="text-sm font-medium">
+            <Link to="/login">Logout</Link>
+          </span>
         </button>
       </div>
     </div>
