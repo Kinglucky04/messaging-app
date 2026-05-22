@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
 import { HiChatBubbleLeftRight } from "react-icons/hi2";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
+import { signUp } from "../config/firebase";
 
 function RegisterPage() {
   const initialValues = {
@@ -18,6 +18,9 @@ function RegisterPage() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const navigate = useNavigate();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -29,15 +32,25 @@ function RegisterPage() {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     const errors = validateForm(formValues);
-    setFormErrors(validateForm(formValues));
+    setFormErrors(errors);
     setIsSubmit(true);
+
     if (Object.keys(errors).length === 0) {
-      setFormValues(initialValues);
+      const ok = await signUp(
+        formValues.fullName,
+        formValues.email,
+        formValues.password,
+      );
+
+      if (ok) {
+        setFormValues(initialValues);
+        navigate("/login");
+      }
     }
-    navigate("/login");
   };
 
   const validateForm = (values) => {

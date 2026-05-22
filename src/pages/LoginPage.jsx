@@ -4,6 +4,7 @@ import { HiChatBubbleLeftRight } from "react-icons/hi2";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
+import { login } from "../config/firebase";
 
 function LoginPage() {
   const initialValues = {
@@ -15,6 +16,8 @@ function LoginPage() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -26,14 +29,27 @@ function LoginPage() {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setFormErrors(validateForm(formValues));
+
+    const errors = validateForm(formValues);
+    setFormErrors(errors);
     setIsSubmit(true);
-    if (Object.keys(formErrors).length === 0) {
-      setFormValues(initialValues);
+
+    if (Object.keys(errors).length > 0) {
+      return;
     }
-    navigate("/chat");
+
+    const ok = await login(formValues.email, formValues.password);
+
+    if (ok) {
+      setFormValues(initialValues);
+      navigate("/chat");
+    } else {
+      setFormErrors({
+        firebase: "Invalid email or password",
+      });
+    }
   };
 
   const validateForm = (values) => {
@@ -70,14 +86,14 @@ function LoginPage() {
               </p>
             </div>
 
-            {isSubmit && Object.keys(formErrors).length === 0 && (
-              <div className="text-green-500 mt-3">Login successful</div>
-            )}
-
-            {isSubmit && Object.keys(formErrors).length > 0 && (
+            {(formErrors.email || formErrors.password) && (
               <div className="text-red-500 mt-3">
                 Please fill all details correctly
               </div>
+            )}
+
+            {formErrors.firebase && (
+              <div className="text-red-500 mt-3">{formErrors.firebase}</div>
             )}
 
             <form
@@ -114,7 +130,10 @@ function LoginPage() {
                 Remember me
               </div>
               <div className="flex justify-center items-center">
-                <button className="bg-blue-500 px-2 py-1 w-full md:px-6 md:py-3 rounded text-white  text-xl cursor-pointer">
+                <button
+                  type="submit"
+                  className="bg-blue-500 px-2 py-1 w-full md:px-6 md:py-3 rounded text-white  text-xl cursor-pointer"
+                >
                   Login
                 </button>
               </div>
